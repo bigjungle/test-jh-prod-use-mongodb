@@ -1,0 +1,16 @@
+version: '2'
+services:
+  testproddatabase-mongodb:
+    image: mongo:4.0.16
+    ports:
+      - '27017:27017'
+    command: mongos --configdb testproddatabase-mongodb-config
+  testproddatabase-mongodb-node:
+    build:
+      context: .
+      dockerfile: mongodb/MongoDB.Dockerfile
+    command: mongod --replSet rs1 --noprealloc --smallfiles
+  testproddatabase-mongodb-config:
+    image: mongo:4.0.16
+    container_name: testproddatabase-mongodb-config
+    command: mongod --noprealloc --smallfiles --configsvr --dbpath /data/db
